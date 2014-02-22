@@ -6,6 +6,16 @@
   </head>
   <body>
     <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <form action="/game" method="post">
+      <p>ユーザ名<input type="text" name="userName"></p>
+      <p>ルームID
+        <select name="roomId" size="1">
+          <% for(var i=0; i<10; i++) { %>
+          <option value="<%= i %>"><%= i %></option>
+          <% } %>
+        </select>
+      </p>
+      <p><input type="submit" value="ログイン"></p>
+    </form>
   </body>
 </html>
