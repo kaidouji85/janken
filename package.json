@@ -11,7 +11,8 @@
     "socket.io":"*",
     "chai": "*",
     "mocha": "*",
-    "socket.io-client" : "*"
+    "socket.io-client" : "*",
+    "selenium-webdriver" : "*"
   },
   "engines": {
     "node": "0.10.x"
