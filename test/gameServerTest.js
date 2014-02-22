@@ -8,7 +8,7 @@ var SCISSORS = 2;
 var PAPER = 3;
 
 describe('ゲームサーバ',function(){    
-    var Server;
+    var GameServer;
     var option = {
         'force new connection' : true,
          port : SERVER_PORT
@@ -16,8 +16,8 @@ describe('ゲームサーバ',function(){
     
     before(function(){
         var app = require('http').createServer().listen(SERVER_PORT);
-        var server = require('../server.js');
-        Server = server({
+        var gameServer = require('../gameServer.js');
+        GameServer = gameServer({
             httpServer : app
         });        
     });
