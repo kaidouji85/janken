@@ -2,7 +2,7 @@ var assert = require('chai').assert;
 var io = require('socket.io-client');
 var SERVER_PORT = 3000;
 var SERVER_URL = 'http://localhost';
-var server = require('../server.js');
+var gameServer = require('../gameServer.js');
 var ROCK = 1;
 var SCISSORS = 2;
 var PAPER = 3;
@@ -107,6 +107,6 @@ describe('ゲームサーバ',function(){
     });
     
     after(function(){
-        Server.server.close();
+        GameServer.server.close();
     });
 });
