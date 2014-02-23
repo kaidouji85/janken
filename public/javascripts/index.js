@@ -8,22 +8,32 @@ window.onload = function(){
     roomId = $("meta[name=roomId]").attr('content');
     userName = $("meta[name=userName]").attr('content');
     
+    console.log('userName : '+userName);
+    
     socket.emit('EnterRoom',{
         roomId : roomId,
         name : userName
     });
     
     socket.on('GameStart',function(data){
-        /*
         var enemyName = getEnemyName(userName,data.players);
-        var Gmae = game({
-            player : userName,
-            enemy : enemyName
+        Game = game({
+            playerName : userName,
+            enemyName : enemyName
         });
-        */
+        Game.start();
+        
+        Game.onThrowHand(function(hand) {
+            console.log('kitayo');
+            socket.emit('Janken', hand);
+        });
+
+        socket.on('Result', function(data) {
+            console.log(data);
+            Game.emitJankenResult(data);
+        });
     });
-    
-    /*
+
     function getEnemyName(playerName,players) {
         var enemyName;
         for(var i in players){
@@ -34,5 +44,4 @@ window.onload = function(){
         }
         return enemyName;
     }
-    */
 };

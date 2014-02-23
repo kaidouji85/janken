@@ -46,7 +46,7 @@ function game(spec,my) {
         rockSprite.x = 100;
         rockSprite.y = 40;
         rockSprite.addEventListener(Event.TOUCH_START,function(e){
-            emitThrowHand(core.ROCK);
+            clickHandButton(core.ROCK);
         });
         core.rootScene.addChild(rockSprite);
         
@@ -55,7 +55,7 @@ function game(spec,my) {
         scissorsSprite.x = 10;
         scissorsSprite.y = 170;
         scissorsSprite.addEventListener(Event.TOUCH_START,function(e){
-            emitThrowHand(core.SCISSORS);
+            clickHandButton(core.SCISSORS);
         });
         core.rootScene.addChild(scissorsSprite);
         
@@ -64,7 +64,7 @@ function game(spec,my) {
         paperSprite.x = 180;
         paperSprite.y = 170;
         paperSprite.addEventListener(Event.TOUCH_START,function(e){
-            emitThrowHand(core.PAPER);
+            clickHandButton(core.PAPER);
         });        
         core.rootScene.addChild(paperSprite);
         
@@ -88,7 +88,14 @@ function game(spec,my) {
         winnerLabel.visible = false;
         core.rootScene.addChild(winnerLabel);        
     }
-
+    
+    function clickHandButton(hand) {
+        rockSprite.visible = false;
+        scissorsSprite.visible = false;
+        paperSprite.visible = false;
+        emitThrowHand(hand);
+    }
+    
     var emitThrowHand;
     core.onThrowHand = function(fnc){
         emitThrowHand = fnc;
@@ -110,8 +117,10 @@ function game(spec,my) {
         winnerLabel.visible = true;
         if(result === playerName) {
             winnerLabel.text = 'かち';
-        } else {
+        } else if(result === enemyName){
             winnerLabel.text = 'まけ';
+        } else {
+            winnerLabel.text = 'あいこ';
         }
     };
     
@@ -124,7 +133,6 @@ function game(spec,my) {
             return core.assets[PICT_PREFIX+'paper.png'];
         }        
     }
-    
     
     return core;
 }
