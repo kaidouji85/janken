@@ -14,7 +14,25 @@ window.onload = function(){
     });
     
     socket.on('GameStart',function(data){
-        console.log('GameStart');
-        console.log(data);
+        /*
+        var enemyName = getEnemyName(userName,data.players);
+        var Gmae = game({
+            player : userName,
+            enemy : enemyName
+        });
+        */
     });
+    
+    /*
+    function getEnemyName(playerName,players) {
+        var enemyName;
+        for(var i in players){
+            if(players[i]!==userName){
+                enemyName = players[i];
+                break;
+            }
+        }
+        return enemyName;
+    }
+    */
 };
