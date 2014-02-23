@@ -10,7 +10,7 @@ window.onload = function(){
         Game.emitJankenResult({
             'result' : '敵',
             'プレイヤー' : hand,
-            '敵' : Game.PAPER
+            '敵' : Game.ROCK
         });
     });
 };

@@ -49,6 +49,18 @@ function gameServer(spec, my) {
                 }
             });
         });
+        
+        socket.on('disconnect',function(data){
+            socket.get('loginInfo',function(err,data){
+                var roomId = data.roomId;
+                socket.leave(roomId);
+                var clients = io.sockets.clients(roomId);
+                for(var i in clients) {
+                    clients[i].disconnect();
+                }
+                
+            });            
+        });
     });
     
     return io;

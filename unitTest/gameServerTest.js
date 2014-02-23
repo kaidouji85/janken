@@ -106,6 +106,23 @@ describe('ゲームサーバ',function(){
         }
     });
     
+    it('一人退室したのでルームが破棄される',function(done){
+        var client1 = io.connect(SERVER_URL,option);
+        client1.emit('EnterRoom',{roomId:3,name:'tarou'});
+        client1.on('GameStart',function(data){
+            client1.disconnect();
+        });
+        
+        var client2 = io.connect(SERVER_URL,option);
+        client2.emit('EnterRoom',{roomId:3,name:'jiro'});
+        client2.on('GameStart',function(data){
+            client2.on('disconnect',function(){
+                done();
+            });
+        });
+                
+    });
+    
     after(function(){
         GameServer.server.close();
     });

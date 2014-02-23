@@ -27,9 +27,6 @@ function game(spec,my) {
     };
     
     function preLoad() {
-        core.preload(PICT_PREFIX+'rock.png');
-        core.preload(PICT_PREFIX+'scissors.png');
-        core.preload(PICT_PREFIX+'paper.png');
         core.preload(PICT_PREFIX+'result.png');
         core.preload(PICT_PREFIX+'janken.png');
     }
@@ -39,7 +36,7 @@ function game(spec,my) {
         rockSprite.image = core.assets[PICT_PREFIX+'janken.png'];
         rockSprite.frame = 0;
         rockSprite.x = 0;
-        rockSprite.y = 170;
+        rockSprite.y = 200;
         rockSprite.scale(0.7,0.7);
         rockSprite.addEventListener(Event.TOUCH_START,function(e){
             clickHandButton(core.ROCK);
@@ -50,7 +47,7 @@ function game(spec,my) {
         scissorsSprite.image = core.assets[PICT_PREFIX+'janken.png'];
         scissorsSprite.frame = 1;
         scissorsSprite.x = 100;
-        scissorsSprite.y = 170;
+        scissorsSprite.y = 200;
         scissorsSprite.scale(0.7,0.7);
         scissorsSprite.addEventListener(Event.TOUCH_START,function(e){
             clickHandButton(core.SCISSORS);
@@ -61,7 +58,7 @@ function game(spec,my) {
         paperSprite.image = core.assets[PICT_PREFIX+'janken.png'];
         paperSprite.frame = 2;
         paperSprite.x = 200;
-        paperSprite.y = 170;
+        paperSprite.y = 200;
         paperSprite.scale(0.7,0.7);
         paperSprite.addEventListener(Event.TOUCH_START,function(e){
             clickHandButton(core.PAPER);
@@ -69,6 +66,7 @@ function game(spec,my) {
         core.rootScene.addChild(paperSprite);
         
         playerHandSprite = new Sprite(128, 128);
+        playerHandSprite.image = core.assets[PICT_PREFIX+'janken.png'];
         playerHandSprite.x = 0;
         playerHandSprite.y = 200;
         playerHandSprite.visible = false;
@@ -76,10 +74,25 @@ function game(spec,my) {
         core.rootScene.addChild(playerHandSprite);
         
         enemyHandSprite =  new Sprite(128, 128);
+        enemyHandSprite.image = core.assets[PICT_PREFIX+'janken.png'];
         enemyHandSprite.x = 100;
         enemyHandSprite.y = 40;
-        enemyHandSprite.visible = false;
+        enemyHandSprite.visible = true;
+        enemyHandSprite.frame = 1;
         enemyHandSprite.scale(1.7, 1.7);
+        enemyHandSprite.state = 'WAIT';
+        enemyHandSprite.count = 0;
+        enemyHandSprite.addEventListener('enterframe', function(e) {
+            switch(this.state){
+                case 'WAIT':
+                    this.frame = this.count/20;
+                    this.count ++;
+                    if(this.count >= 20*3) {
+                        this.count=0;
+                    }
+                    break;
+            }
+        });
         core.rootScene.addChild(enemyHandSprite);
         
         winnerLabel = new Label();
@@ -119,9 +132,10 @@ function game(spec,my) {
         scissorsSprite.visible = false;
         paperSprite.visible = false;
         playerHandSprite.visible = true;
-        playerHandSprite.image = getHandImage(playerHand);
+        playerHandSprite.frame = getHandFrame(playerHand);
         enemyHandSprite.visible = true;
-        enemyHandSprite.image = getHandImage(enemyhand);
+        enemyHandSprite.state = 'STOP';
+        enemyHandSprite.frame = getHandFrame(enemyhand);
         /*
         winnerLabel.visible = true;
         if(result === playerName) {
@@ -137,13 +151,13 @@ function game(spec,my) {
         
     };
     
-    function getHandImage(hand){
+    function getHandFrame(hand){
         if(hand === core.ROCK){
-            return core.assets[PICT_PREFIX+'rock.png'];
+            return 0;
         } else if (hand === core.SCISSORS) {
-            return core.assets[PICT_PREFIX+'scissors.png'];
+            return 1;
         } else if (hand === core.PAPER) {
-            return core.assets[PICT_PREFIX+'paper.png'];
+            return 2;
         }        
     }
     
