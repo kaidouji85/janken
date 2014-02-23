@@ -11,6 +11,7 @@ function game(spec,my) {
     var playerHandSprite;
     var enemyHandSprite;
     var winnerLabel;
+    var resultSprite;
   
     var core = new Core(320, 320);
     core.fps = 60;
@@ -30,6 +31,7 @@ function game(spec,my) {
         core.preload(PICT_PREFIX+'rock.png');
         core.preload(PICT_PREFIX+'scissors.png');
         core.preload(PICT_PREFIX+'paper.png');
+        core.preload(PICT_PREFIX+'result.png');
     }
 
     function initSprite() {
@@ -69,15 +71,17 @@ function game(spec,my) {
         core.rootScene.addChild(paperSprite);
         
         playerHandSprite = new Sprite(128, 128);
-        playerHandSprite.x = 180;
-        playerHandSprite.y = 100;
+        playerHandSprite.x = 0;
+        playerHandSprite.y = 200;
         playerHandSprite.visible = false;
+        playerHandSprite.scale(0.6,0.6);
         core.rootScene.addChild(playerHandSprite);
         
         enemyHandSprite =  new Sprite(128, 128);
-        enemyHandSprite.x = 20;
-        enemyHandSprite.y = 100;
+        enemyHandSprite.x = 100;
+        enemyHandSprite.y = 40;
         enemyHandSprite.visible = false;
+        enemyHandSprite.scale(1.7, 1.7);
         core.rootScene.addChild(enemyHandSprite);
         
         winnerLabel = new Label();
@@ -86,7 +90,14 @@ function game(spec,my) {
         winnerLabel.color = '#fff';
         winnerLabel.font = '40px cursive';
         winnerLabel.visible = false;
-        core.rootScene.addChild(winnerLabel);        
+        core.rootScene.addChild(winnerLabel);
+        
+        resultSprite = new Sprite(320,320);
+        resultSprite.image = core.assets[PICT_PREFIX+'result.png'];
+        resultSprite.x = 0;
+        resultSprite.y = 0;
+        resultSprite.visible = false;
+        core.rootScene.addChild(resultSprite);
     }
     
     function clickHandButton(hand) {
@@ -114,6 +125,7 @@ function game(spec,my) {
         playerHandSprite.image = getHandImage(playerHand);
         enemyHandSprite.visible = true;
         enemyHandSprite.image = getHandImage(enemyhand);
+        /*
         winnerLabel.visible = true;
         if(result === playerName) {
             winnerLabel.text = 'かち';
@@ -122,6 +134,10 @@ function game(spec,my) {
         } else {
             winnerLabel.text = 'あいこ';
         }
+        */
+        resultSprite.visible = true;
+        
+        
     };
     
     function getHandImage(hand){
