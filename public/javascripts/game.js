@@ -3,8 +3,7 @@ function game(spec,my) {
     
     var playerName = spec.playerName;
     var enemyName = spec.enemyName;
-    
-    var jankenReadyLabel;
+
     var rockSprite;
     var scissorsSprite;
     var paperSprite;
@@ -32,39 +31,38 @@ function game(spec,my) {
         core.preload(PICT_PREFIX+'scissors.png');
         core.preload(PICT_PREFIX+'paper.png');
         core.preload(PICT_PREFIX+'result.png');
+        core.preload(PICT_PREFIX+'janken.png');
     }
 
     function initSprite() {
-        jankenReadyLabel = new Label();
-        jankenReadyLabel.x = 100;
-        jankenReadyLabel.y = 10;
-        jankenReadyLabel.color = '#fff';
-        jankenReadyLabel.text = "なにだす？";
-        jankenReadyLabel.font = '20px cursive';
-        core.rootScene.addChild(jankenReadyLabel);
-        
         rockSprite = new Sprite(128, 128);
-        rockSprite.image = core.assets[PICT_PREFIX+'rock.png'];
-        rockSprite.x = 100;
-        rockSprite.y = 40;
+        rockSprite.image = core.assets[PICT_PREFIX+'janken.png'];
+        rockSprite.frame = 0;
+        rockSprite.x = 0;
+        rockSprite.y = 170;
+        rockSprite.scale(0.7,0.7);
         rockSprite.addEventListener(Event.TOUCH_START,function(e){
             clickHandButton(core.ROCK);
         });
         core.rootScene.addChild(rockSprite);
         
         scissorsSprite = new Sprite(128, 128);
-        scissorsSprite.image = core.assets[PICT_PREFIX+'scissors.png'];
-        scissorsSprite.x = 10;
+        scissorsSprite.image = core.assets[PICT_PREFIX+'janken.png'];
+        scissorsSprite.frame = 1;
+        scissorsSprite.x = 100;
         scissorsSprite.y = 170;
+        scissorsSprite.scale(0.7,0.7);
         scissorsSprite.addEventListener(Event.TOUCH_START,function(e){
             clickHandButton(core.SCISSORS);
         });
         core.rootScene.addChild(scissorsSprite);
         
         paperSprite = new Sprite(128, 128);
-        paperSprite.image = core.assets[PICT_PREFIX+'paper.png'];
-        paperSprite.x = 180;
+        paperSprite.image = core.assets[PICT_PREFIX+'janken.png'];
+        paperSprite.frame = 2;
+        paperSprite.x = 200;
         paperSprite.y = 170;
+        paperSprite.scale(0.7,0.7);
         paperSprite.addEventListener(Event.TOUCH_START,function(e){
             clickHandButton(core.PAPER);
         });        
@@ -117,7 +115,6 @@ function game(spec,my) {
         var playerHand = data[playerName];
         var enemyhand = data[enemyName];
         
-        jankenReadyLabel.visible = false;
         rockSprite.visible = false;
         scissorsSprite.visible = false;
         paperSprite.visible = false;
