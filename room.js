@@ -42,7 +42,7 @@ function room(){
         var player2 = inPlayers[1];
         var player1Hand = handBuffer[player1];
         var player2Hand = handBuffer[player2];
-        
+
         var result = that.Janken.play({
             player1 : player1Hand,
             player2 : player2Hand
@@ -60,6 +60,8 @@ function room(){
             return inPlayers[0];
         } else if(result===2) {
             return inPlayers[1];
+        } else {
+            return null;
         }
     }
     

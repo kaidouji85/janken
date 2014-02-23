@@ -24,7 +24,9 @@ window.onload = function(){
         Game.start();
         
         Game.onThrowHand(function(hand) {
-            console.log('kitayo');
+            if(1 === hand){
+                console.log('seikou');
+            }
             socket.emit('Janken', hand);
         });
 
