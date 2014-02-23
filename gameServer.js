@@ -55,9 +55,14 @@ function gameServer(spec, my) {
                 var roomId = data.roomId;
                 socket.leave(roomId);
                 var clients = io.sockets.clients(roomId);
-                for(var i in clients) {
-                    clients[i].disconnect();
+                if(clients.length === 0) {
+                    roomArray[roomId] = room();
+                } else {
+                    for(var i in clients) {
+                        clients[i].disconnect();
+                    }
                 }
+                
                 
             });            
         });

@@ -119,9 +119,44 @@ describe('ゲームサーバ',function(){
             client2.on('disconnect',function(){
                 done();
             });
-        });
-                
+        });        
     });
+    
+    it('ルーム退出後も入室できる',function(done){
+        var client1 = io.connect(SERVER_URL,option);
+        client1.emit('EnterRoom',{roomId:4,name:'tarou'});
+        client1.on('GameStart',function(data){
+            client1.disconnect();
+        });
+        
+        var client2 = io.connect(SERVER_URL,option);
+        client2.emit('EnterRoom',{roomId:4,name:'jiro'});
+        client2.on('GameStart',function(data){
+            client2.on('disconnect',function(){
+                var client1_2 = io.connect(SERVER_URL,option);
+                client1_2.emit('EnterRoom',{roomId:4,name:'tarou'});
+                client1_2.on('GameStart',function(data){
+                    console.log('kitayo');
+                    complateCLient('1_2');
+                    if(isFinishTest()){
+                        done();
+                    }
+                });                
+                
+                var client2_2 = io.connect(SERVER_URL,option);
+                client2_2.emit('EnterRoom',{roomId:4,name:'tarou'});
+                client2_2.on('GameStart',function(data){
+                    console.log('kitayo');
+                    complateCLient('2_2');
+                    if(isFinishTest()){
+                        done();
+                    }
+                });                 
+                
+                
+            });
+        });        
+    });    
     
     after(function(){
         GameServer.server.close();
