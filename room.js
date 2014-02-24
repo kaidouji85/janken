@@ -52,6 +52,7 @@ function room(){
             result : winner};
         ret[player1] = player1Hand;
         ret[player2] = player2Hand;
+        handBuffer = {};
         return ret;
     };
     

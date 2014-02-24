@@ -136,7 +136,6 @@ describe('ゲームサーバ',function(){
                 var client1_2 = io.connect(SERVER_URL,option);
                 client1_2.emit('EnterRoom',{roomId:4,name:'tarou'});
                 client1_2.on('GameStart',function(data){
-                    console.log('kitayo');
                     complateCLient('1_2');
                     if(isFinishTest()){
                         done();
@@ -146,17 +145,71 @@ describe('ゲームサーバ',function(){
                 var client2_2 = io.connect(SERVER_URL,option);
                 client2_2.emit('EnterRoom',{roomId:4,name:'tarou'});
                 client2_2.on('GameStart',function(data){
-                    console.log('kitayo');
                     complateCLient('2_2');
                     if(isFinishTest()){
                         done();
                     }
                 });                 
-                
-                
             });
-        });        
-    });    
+        });               
+    });
+    
+        
+    it('2回連続でじゃんけんをする',function(done){
+        var client1 = io.connect(SERVER_URL,option);
+        client1.emit('EnterRoom',{roomId:5,name:'tarou'});
+        client1.on('GameStart',function(data){
+            client1.emit('Janken',ROCK);
+            var count = 0;
+            client1.on('Result',function(data){
+                count ++;
+                switch (count){
+                    case 1:
+                        client1.emit('Janken',SCISSORS);
+                        break;
+                    case 2:
+                        assertOfResultData(data);
+                        complateCLient(1);
+                        if(isFinishTest()){
+                            done();
+                        }
+                        break;
+                }
+            });
+        });
+        
+        var client2 = io.connect(SERVER_URL,option);
+        client2.emit('EnterRoom',{roomId:5,name:'jiro'});
+        client2.on('GameStart',function(data){
+            client2.emit('Janken',SCISSORS);
+            var count = 0;
+            client2.on('Result',function(data){
+                count ++;
+                switch(count){
+                    case 1:
+                        client2.emit('Janken',PAPER);
+                        break;
+                    case 2:
+                        assertOfResultData(data);
+                        complateCLient(2);
+                        if(isFinishTest()){
+                            done();
+                        }
+                        break;
+                }
+
+            });            
+        });
+        
+        function assertOfResultData(data){
+            var expect = {
+                result : 'tarou',
+                tarou : SCISSORS,
+                jiro : PAPER
+            };
+            assert.deepEqual(data,expect,'正しいResultレスポンスオブジェクト');
+        }
+    });
     
     after(function(){
         GameServer.server.close();

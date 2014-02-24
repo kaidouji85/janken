@@ -11,6 +11,7 @@ function game(spec,my) {
     var enemyHandSprite;
     var winnerLabel;
     var resultSprite;
+    var timerEntity;
   
     var core = new Core(320, 320);
     core.fps = 60;
@@ -109,6 +110,23 @@ function game(spec,my) {
         resultSprite.y = 0;
         resultSprite.visible = false;
         core.rootScene.addChild(resultSprite);
+        
+        timerEntity = new Entity();
+        timerEntity.count = -1;
+        timerEntity.fnc;
+        timerEntity.addEventListener('enterframe', function(e) {
+            if(timerEntity.count>0){
+                timerEntity.count--;
+            } else if(timerEntity.count===0) {
+                timerEntity.fnc();
+                timerEntity.count = -1;
+            }
+        });
+        timerEntity.start=function(frameCount,fnc){
+            timerEntity.count = frameCount;
+            timerEntity.fnc = fnc;
+        };
+        core.rootScene.addChild(timerEntity);
     }
     
     function clickHandButton(hand) {
@@ -136,18 +154,18 @@ function game(spec,my) {
         enemyHandSprite.visible = true;
         enemyHandSprite.state = 'STOP';
         enemyHandSprite.frame = getHandFrame(enemyhand);
-        /*
-        winnerLabel.visible = true;
-        if(result === playerName) {
-            winnerLabel.text = 'かち';
-        } else if(result === enemyName){
-            winnerLabel.text = 'まけ';
-        } else {
-            winnerLabel.text = 'あいこ';
-        }
-        */
         resultSprite.visible = true;
         
+        timerEntity.start(180,function(){
+            rockSprite.visible = true;
+            scissorsSprite.visible = true;
+            paperSprite.visible = true;
+            playerHandSprite.visible = false;
+            enemyHandSprite.visible = true;
+            enemyHandSprite.state = 'WAIT';
+            enemyHandSprite.count = 0;
+            resultSprite.visible = false;            
+        });
         
     };
     
