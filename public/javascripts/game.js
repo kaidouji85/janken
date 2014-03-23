@@ -155,18 +155,7 @@ function game(spec,my) {
         enemyHandSprite.state = 'STOP';
         enemyHandSprite.frame = getHandFrame(enemyhand);
         resultSprite.visible = true;
-        
-        timerEntity.start(180,function(){
-            rockSprite.visible = true;
-            scissorsSprite.visible = true;
-            paperSprite.visible = true;
-            playerHandSprite.visible = false;
-            enemyHandSprite.visible = true;
-            enemyHandSprite.state = 'WAIT';
-            enemyHandSprite.count = 0;
-            resultSprite.visible = false;            
-        });
-        
+        timerEntity.start(180,moveSelectHand);  
     };
     
     function getHandFrame(hand){
@@ -177,6 +166,17 @@ function game(spec,my) {
         } else if (hand === core.PAPER) {
             return 2;
         }        
+    }
+    
+    function moveSelectHand(){
+        rockSprite.visible = true;
+        scissorsSprite.visible = true;
+        paperSprite.visible = true;
+        playerHandSprite.visible = false;
+        enemyHandSprite.visible = true;
+        enemyHandSprite.state = 'WAIT';
+        enemyHandSprite.count = 0;
+        resultSprite.visible = false;
     }
     
     return core;

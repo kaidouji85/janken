@@ -62,8 +62,6 @@ function gameServer(spec, my) {
                         clients[i].disconnect();
                     }
                 }
-                
-                
             });            
         });
     });
