@@ -9,10 +9,13 @@ function game(spec,my) {
     var paperSprite;
     var playerHandSprite;
     var enemyHandSprite;
-    var winnerLabel;
     var resultSprite;
-    var timerEntity;
-  
+    var kachiSprite;
+    var makeSprite;
+    var aikoSprite;
+    var emitFrameEvent = function(){};
+    var emitFrame = -1;
+    
     var core = new Core(320, 320);
     core.fps = 60;
     core.rootScene.backgroundColor = "black";
@@ -24,15 +27,22 @@ function game(spec,my) {
     core.onload = function() {
         initSprite();
         core.rootScene.addEventListener('enterframe', function(e) {
+            if (core.frame === emitFrame) {
+                emitFrameEvent();
+            }
         });
     };
     
     function preLoad() {
         core.preload(PICT_PREFIX+'result.png');
         core.preload(PICT_PREFIX+'janken.png');
+        core.preload(PICT_PREFIX+'kachi.png');
+        core.preload(PICT_PREFIX+'make.png');
+        core.preload(PICT_PREFIX+'aiko.png');
     }
 
     function initSprite() {
+        //グーアイコン
         rockSprite = new Sprite(128, 128);
         rockSprite.image = core.assets[PICT_PREFIX+'janken.png'];
         rockSprite.frame = 0;
@@ -44,6 +54,7 @@ function game(spec,my) {
         });
         core.rootScene.addChild(rockSprite);
         
+        //チョキアイコン
         scissorsSprite = new Sprite(128, 128);
         scissorsSprite.image = core.assets[PICT_PREFIX+'janken.png'];
         scissorsSprite.frame = 1;
@@ -55,6 +66,7 @@ function game(spec,my) {
         });
         core.rootScene.addChild(scissorsSprite);
         
+        //パーアイコン
         paperSprite = new Sprite(128, 128);
         paperSprite.image = core.assets[PICT_PREFIX+'janken.png'];
         paperSprite.frame = 2;
@@ -66,6 +78,7 @@ function game(spec,my) {
         });        
         core.rootScene.addChild(paperSprite);
         
+        //プレイヤーが出した手
         playerHandSprite = new Sprite(128, 128);
         playerHandSprite.image = core.assets[PICT_PREFIX+'janken.png'];
         playerHandSprite.x = 0;
@@ -74,6 +87,7 @@ function game(spec,my) {
         playerHandSprite.scale(0.6,0.6);
         core.rootScene.addChild(playerHandSprite);
         
+        //敵が出した手
         enemyHandSprite =  new Sprite(128, 128);
         enemyHandSprite.image = core.assets[PICT_PREFIX+'janken.png'];
         enemyHandSprite.x = 100;
@@ -84,49 +98,43 @@ function game(spec,my) {
         enemyHandSprite.state = 'WAIT';
         enemyHandSprite.count = 0;
         enemyHandSprite.addEventListener('enterframe', function(e) {
-            switch(this.state){
+            switch(enemyHandSprite.state){
                 case 'WAIT':
-                    this.frame = this.count/20;
-                    this.count ++;
-                    if(this.count >= 20*3) {
-                        this.count=0;
+                    enemyHandSprite.frame = enemyHandSprite.count/20;
+                    enemyHandSprite.count ++;
+                    if(enemyHandSprite.count >= 20*3) {
+                        enemyHandSprite.count=0;
                     }
                     break;
             }
         });
         core.rootScene.addChild(enemyHandSprite);
         
-        winnerLabel = new Label();
-        winnerLabel.x = 100;
-        winnerLabel.y = 20;
-        winnerLabel.color = '#fff';
-        winnerLabel.font = '40px cursive';
-        winnerLabel.visible = false;
-        core.rootScene.addChild(winnerLabel);
-        
+        //結果表示画像
         resultSprite = new Sprite(320,320);
         resultSprite.image = core.assets[PICT_PREFIX+'result.png'];
         resultSprite.x = 0;
         resultSprite.y = 0;
         resultSprite.visible = false;
         core.rootScene.addChild(resultSprite);
+       
+        //勝ち
+        kachiSprite = new Sprite(320,320);
+        kachiSprite.image = core.assets[PICT_PREFIX+'kachi.png'];
+        kachiSprite.visible = false;
+        core.rootScene.addChild(kachiSprite);
         
-        timerEntity = new Entity();
-        timerEntity.count = -1;
-        timerEntity.fnc;
-        timerEntity.addEventListener('enterframe', function(e) {
-            if(timerEntity.count>0){
-                timerEntity.count--;
-            } else if(timerEntity.count===0) {
-                timerEntity.fnc();
-                timerEntity.count = -1;
-            }
-        });
-        timerEntity.start=function(frameCount,fnc){
-            timerEntity.count = frameCount;
-            timerEntity.fnc = fnc;
-        };
-        core.rootScene.addChild(timerEntity);
+        //負け
+        makeSprite = new Sprite(320,320);
+        makeSprite.image = core.assets[PICT_PREFIX+'make.png'];
+        makeSprite.visible = false;
+        core.rootScene.addChild(makeSprite);
+        
+        //あいこ
+        aikoSprite = new Sprite(320,320);
+        aikoSprite.image = core.assets[PICT_PREFIX+'aiko.png'];
+        aikoSprite.visible = false;
+        core.rootScene.addChild(aikoSprite);        
     }
     
     function clickHandButton(hand) {
@@ -155,7 +163,37 @@ function game(spec,my) {
         enemyHandSprite.state = 'STOP';
         enemyHandSprite.frame = getHandFrame(enemyhand);
         resultSprite.visible = true;
-        timerEntity.start(180,moveSelectHand);  
+        setFrameCountEvent(core.frame+60,moveJankenVictory);
+        
+        function moveJankenVictory() {
+            if(playerName===result){
+                kachiSprite.visible = true;
+            } else if(enemyName===result){
+                makeSprite.visible = true;
+            } else {
+                aikoSprite.visible = true;
+            }
+            setFrameCountEvent(core.frame+90,moveSelectHand);
+        }
+
+        function moveSelectHand() {
+            rockSprite.visible = true;
+            scissorsSprite.visible = true;
+            paperSprite.visible = true;
+            playerHandSprite.visible = false;
+            enemyHandSprite.visible = true;
+            enemyHandSprite.state = 'WAIT';
+            enemyHandSprite.count = 0;
+            resultSprite.visible = false;
+            if(playerName===result){
+                kachiSprite.visible = false;
+            } else if (enemyName===result){
+                makeSprite.visible = false;
+            } else {
+                aikoSprite.visible = false;
+            }
+        }
+
     };
     
     function getHandFrame(hand){
@@ -168,15 +206,9 @@ function game(spec,my) {
         }        
     }
     
-    function moveSelectHand(){
-        rockSprite.visible = true;
-        scissorsSprite.visible = true;
-        paperSprite.visible = true;
-        playerHandSprite.visible = false;
-        enemyHandSprite.visible = true;
-        enemyHandSprite.state = 'WAIT';
-        enemyHandSprite.count = 0;
-        resultSprite.visible = false;
+    function setFrameCountEvent(frame,fnc){
+        emitFrame = frame;
+        emitFrameEvent = fnc;
     }
     
     return core;

@@ -8,7 +8,7 @@ window.onload = function(){
     
     Game.onThrowHand(function(hand){
         Game.emitJankenResult({
-            'result' : '敵',
+            'result' : 'プレイヤー',
             'プレイヤー' : hand,
             '敵' : Game.ROCK
         });
