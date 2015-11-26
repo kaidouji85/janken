@@ -7,12 +7,12 @@
   },
   "dependencies": {
     "express": "3.4.7",
-    "ejs": "*",
-    "socket.io":"*",
-    "chai": "*",
-    "mocha": "*",
-    "socket.io-client" : "*",
-    "selenium-webdriver" : "*"
+    "ejs": "0.8.5",
+    "socket.io":"0.9.16",
+    "chai": "1.9.0",
+    "mocha": "1.17.1",
+    "socket.io-client" : "0.9.16",
+    "selenium-webdriver" : "2.40.0"
   },
   "engines": {
     "node": "0.10.x"
