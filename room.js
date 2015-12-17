@@ -7,6 +7,9 @@ function room(){
     that.Janken = janken();
     
     that.join = function(name){
+        if (inPlayers.length == 1 && inPlayers[0] === name) {
+            throw new Error('this user already logined.');
+        }
         inPlayers.push(name);
     };
     
